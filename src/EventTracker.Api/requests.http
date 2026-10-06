@@ -1,0 +1,29 @@
+@host = http://localhost:5000
+
+### Health
+GET {{host}}/health
+
+### Create an event
+# @name createEvent
+POST {{host}}/api/events
+Content-Type: application/json
+
+{ "title": "Angular Meetup", "date": "2026-11-15T10:00:00", "location": "Bengaluru" }
+
+### Register a participant
+@eventId = {{createEvent.response.body.$.id}}
+# @name register
+POST {{host}}/api/events/{{eventId}}/participants
+Content-Type: application/json
+
+{ "name": "Asha", "email": "asha@example.com" }
+
+### Check the participant in
+@participantId = {{register.response.body.$.id}}
+POST {{host}}/api/events/{{eventId}}/participants/{{participantId}}/check-in
+
+### Attendance report (JSON)
+GET {{host}}/api/events/{{eventId}}/report
+
+### Attendance report (CSV download)
+GET {{host}}/api/events/{{eventId}}/report.csv
