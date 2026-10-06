@@ -11,6 +11,9 @@ public interface IEventStore
     IReadOnlyList<EventItem> GetEvents();
     EventItem? GetEvent(Guid id);
     EventItem AddEvent(string title, DateTime date, string location);
+
+    EventItem? UpdateEvent(Guid id, string title, DateTime date, string location);
+
     bool DeleteEvent(Guid id);
 
     IReadOnlyList<Participant> GetParticipants(Guid eventId);

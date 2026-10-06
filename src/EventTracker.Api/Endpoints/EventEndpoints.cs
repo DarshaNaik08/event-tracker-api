@@ -29,6 +29,18 @@ public static class EventEndpoints
             return Results.Created($"/api/events/{created.Id}", created);
         });
 
+        group.MapPut("/{id:guid}", (Guid id, UpdateEventRequest req, IEventStore store) =>
+        {
+            var errors = new Dictionary<string, string[]>();
+            if (string.IsNullOrWhiteSpace(req.Title)) errors["title"] = new[] { "Title is required." };
+            if (req.Date is null) errors["date"] = new[] { "Date is required." };
+            if (string.IsNullOrWhiteSpace(req.Location)) errors["location"] = new[] { "Location is required." };
+            if (errors.Count > 0) return Results.ValidationProblem(errors);
+
+            var updated = store.UpdateEvent(id, req.Title!.Trim(), req.Date!.Value, req.Location!.Trim());
+            return updated is null ? Results.NotFound() : Results.Ok(updated);
+        });
+
         group.MapDelete("/{id:guid}", (Guid id, IEventStore store) =>
             store.DeleteEvent(id) ? Results.NoContent() : Results.NotFound());
 

@@ -21,6 +21,14 @@ public class InMemoryEventStore : IEventStore
         return item;
     }
 
+    public EventItem? UpdateEvent(Guid id, string title, DateTime date, string location)
+    {
+        if (!_events.ContainsKey(id)) return null;
+        var updated = new EventItem(id, title, date, location);
+        _events[id] = updated;
+        return updated;
+    }
+
     public bool DeleteEvent(Guid id)
     {
         if (!_events.TryRemove(id, out _)) return false;

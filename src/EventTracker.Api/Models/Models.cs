@@ -8,6 +8,8 @@ public record CreateEventRequest(string? Title, DateTime? Date, string? Location
 
 public record RegisterParticipantRequest(string? Name, string? Email);
 
+public record UpdateEventRequest(string? Title, DateTime? Date, string? Location);
+
 public record EventReport(
     Guid EventId,
     string Title,
